@@ -23,7 +23,7 @@ class TestCoffeeMachine:
         low_threshold = 45
         self.machine = Machine(outlet, total_item_quantity, low_threshold)
 
-    def test_dispense(self):
+    def test_dispense_linear(self):
 
         beverages = {
             "hot_tea": {
@@ -57,6 +57,38 @@ class TestCoffeeMachine:
         combined_output = self.machine.fulfill_beverage_dispense_request(beverages)
         return combined_output
 
+    def test_dispense_concurrent(self):
+        beverages = {
+            "hot_tea": {
+                "hot_water": 200,
+                "hot_milk": 100,
+                "ginger_syrup": 10,
+                "sugar_syrup": 10,
+                "tea_leaves_syrup": 30
+            },
+            "hot_coffee": {
+                "hot_water": 100,
+                "ginger_syrup": 30,
+                "hot_milk": 400,
+                "sugar_syrup": 50,
+                "tea_leaves_syrup": 30
+            },
+            "black_tea": {
+                "hot_water": 300,
+                "ginger_syrup": 30,
+                "sugar_syrup": 50,
+                "tea_leaves_syrup": 30
+            },
+            "green_tea": {
+                "hot_water": 100,
+                "ginger_syrup": 30,
+                "sugar_syrup": 50,
+                "green_mixture": 30
+            }
+        }
+        combined_output = self.machine.fulfill_beverage_concurrent(beverages)
+        return combined_output
+
     def tear_down(self):
         self.machine = None
 
@@ -64,9 +96,15 @@ class TestCoffeeMachine:
 def __main__():
     test = TestCoffeeMachine()
     test.setup()
-    combined_output = test.test_dispense()
+    combined_output = test.test_dispense_linear()
     print(combined_output)
     test.tear_down()
+
+    test.setup()
+    concurrent_combined_output = test.test_dispense_concurrent()
+    print(concurrent_combined_output)
+
+
 
 
 if __name__ == "__main__":
